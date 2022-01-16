@@ -3,6 +3,11 @@
  */
 
 const alphabet = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя";
+
+/**
+ * Функции для выполнения задания 2-4.
+ */
+
 /**
  * Функция генерирует кол-во символов левее или правее letter символа.
  * doGenerateBefore - если true то генерация левее символа, если false то правее
@@ -79,7 +84,65 @@ function taskPart2to4(text) {
 }
 
 
-// Тесты
+/**
+ * Функции для выполнения задания 5.
+ */
+function isCloseToEachOther(char1, char2) {
+  const char1Index = alphabet.indexOf(char1);
+  const char2Index = alphabet.indexOf(char2);
+  const lastCapIndex = alphabet.indexOf('Я')
+  // Проверяем яв-ся ли в нашем алфавите char2 соседом справа от char1 И то что char1 не является буквой "Я"(потому что у нее не может быть соседа )
+  return (char1Index + 1 === char2Index) && !(char1Index === lastCapIndex);
+}
+
+function taskPart5(str, seqLength) {
+  console.log(`\nИсходная строка ${str}. Длина подстрок необходимых найти ${seqLength}`)
+  let curSeqCounter = 1; // CurrentSequenceCounter. Счетчик последнего слова (минимум 1 потому что буква как минимум 1 будет)
+  let capitalLetterSeqTotal = 0; // Сколько раз встречались подстроки прописных букв размером в указанный параметр seqLength
+  let smallLetterSeqTotal = 0; // Сколько раз встречались подстроки строчных букв размером в указанный параметр seqLength
+
+  for (let i = 0; i < str.length; i++) {
+    const curChar = str[i];
+    if (isCloseToEachOther(curChar, str[i + 1])) { // Если текущая и следующая за ней буква стоят рядом
+      curSeqCounter++; // Увеличиваем счетчик текущего слова
+    }
+    else { // Иначе значит идущий список алфавитной строки остановился
+      if (curSeqCounter === seqLength ) { // Если счетчик подстроки равен нужной длине подстроке
+        // Если текущий символ Заглавная буква то увеличиваем счетчик прописных подстрок иначе увеличиваем счетчик строчный подстрок
+        ( curChar ===  curChar.toUpperCase()) ? capitalLetterSeqTotal++ : smallLetterSeqTotal++;
+      }
+      curSeqCounter = 1; // Обнуляем счетчик
+    }
+  }
+  console.log(`Количество подстрок с ${seqLength} подряд идущими символами в нижнем регистре:  ${smallLetterSeqTotal}`)
+  console.log(`Количество подстрок с ${seqLength} подряд идущими символами в верхнем регистре:  ${capitalLetterSeqTotal}`)
+  return capitalLetterSeqTotal + smallLetterSeqTotal; // В ответ возвращаем сумму найденных подстрок
+}
+
+const userString = prompt("Введите строку состоящую  из маленьких/больших русских букв и цифр в перемешку")
+const processedString = taskPart2to4(userString);
+const searchSubStringSeqNumber = Number(prompt(`После шагов 1-4 результат: ${processedString},\n введите число какой длины подстроки нужно искать?`));
+const result = taskPart5(processedString, searchSubStringSeqNumber);
+alert(`Всего нашлось подстрок такой длинны ${result}!`)
+
+/*
+  Tests чтобы убедится что все корректно отрабатывает
+ */
+
+// Проверка верно ли работает функция хэлпер generateStringAroundLetter() обособленно
+console.assert(generateStringAroundLetter("В", 3, true) === 'яАБ');
+console.assert(generateStringAroundLetter("В", 3, false) === 'ГДЕ');
+console.assert(generateStringAroundLetter("Я", 3, true) === 'ЬЭЮ');
+console.assert(generateStringAroundLetter("Я", 3, false) === 'абв');
+console.assert(generateStringAroundLetter("а", 3, true) === 'ЭЮЯ');
+console.assert(generateStringAroundLetter("б", 3, true) === 'ЮЯа');
+console.assert(generateStringAroundLetter("я", 3, true) === 'ьэю');
+console.assert(generateStringAroundLetter("а", 10, false) === 'бвгдеёжзий');
+console.assert(generateStringAroundLetter("я", 10, false) === 'АБВГДЕЁЖЗИ');
+console.assert(generateStringAroundLetter("А", 10, false) === 'БВГДЕЁЖЗИЙ');
+
+
+// Тесты taskPart2to4 обработка подстроки
 console.assert(taskPart2to4('а') === 'а');
 console.assert(taskPart2to4('аб') === 'аб');
 console.assert(taskPart2to4('В') === 'э');
@@ -95,22 +158,34 @@ console.assert(taskPart2to4('3АгА3') === 'эюяягяАБВ');
 console.assert(taskPart2to4('10АгА10') === 'АБВГДЕЁЖЗИЙгяАБВГДЕЁЖЗИ');
 
 
-alert(taskPart2to4(prompt("Введите строку состоящую  из маленьких/больших русских букв и цифр в перемешку")));
+
+// Тесты поиска подстрок
+console.assert(taskPart5('а', 1) === 1);
+console.assert(taskPart5('аа', 1) === 2);
+console.assert(taskPart5('ааа', 1) === 3);
+console.assert(taskPart5('а', 2) === 0);
+console.assert(taskPart5('аб', 2) === 1);
+console.assert(taskPart5('аба', 1) === 1);
+console.assert(taskPart5('аба', 2) === 1);
+console.assert(taskPart5('абаб', 2) === 2);
+console.assert(taskPart5('АБВ', 3) === 1);
+console.assert(taskPart5('АБВБ', 3) === 1);
+console.assert(taskPart5('АБабАБ', 2) === 3);
+console.assert(taskPart5('абвабв', 3) === 2);
+console.assert(taskPart5('АБвГДабГДЕ', 1) === 1);
+console.assert(taskPart5('АБвГДабГДЕ', 2) === 3);
+console.assert(taskPart5('АБвГДабГДЕ', 3) === 1);
+console.assert(taskPart5('АБвГДабГДЕ', 4) === 0);
 
 
-/*Проверка верно ли работает функция generateStringAroundLetter() обособленно
-
-console.assert(generateStringAroundLetter("В", 3, true) === 'яАБ');
-console.assert(generateStringAroundLetter("В", 3, false) === 'ГДЕ');
-console.assert(generateStringAroundLetter("Я", 3, true) === 'ЬЭЮ');
-console.assert(generateStringAroundLetter("Я", 3, false) === 'абв');
-console.assert(generateStringAroundLetter("а", 3, true) === 'ЭЮЯ');
-console.assert(generateStringAroundLetter("б", 3, true) === 'ЮЯа');
-console.assert(generateStringAroundLetter("я", 3, true) === 'ьэю');
-console.assert(generateStringAroundLetter("а", 10, false) === 'бвгдеёжзий');
-console.assert(generateStringAroundLetter("я", 10, false) === 'АБВГДЕЁЖЗИ');
-console.assert(generateStringAroundLetter("А", 10, false) === 'БВГДЕЁЖЗИЙ');
-*/
+// Тесты для метода хелпера, убедится что он корректно отрабатыавет
+console.assert(isCloseToEachOther("а", "б") === true);
+console.assert(isCloseToEachOther("б", "а") === false);
+console.assert(isCloseToEachOther("б", "в") === true);
+console.assert(isCloseToEachOther("в", "б") === false);
+console.assert(isCloseToEachOther("А", "Б") === true);
+console.assert(isCloseToEachOther("Б", "А") === false);
+console.assert(isCloseToEachOther("Я", "а") === false);
 
 
 
@@ -186,4 +261,38 @@ function taskPart2to4(inputText) {
   }
   return resultText;
 }
+ */
+
+/*
+Самое первое решение без рефакторинга для решения части 5
+
+// function task5(str, seqLength){
+//   let curSeqCounter = 1; // CurrentSequenceCounter. Счетчик последнего слова
+//
+//   let capitalLetterSeqTotal = 0; // Сколько раз встречались подстроки прописных букв размером в указанный параметр seqLength
+//   let smallLetterSeqTotal = 0; // Сколько раз встречались подстроки строчных букв размером в указанный параметр seqLength
+//
+//   for (let i = 0; i < str.length; i++) {
+//     const curChar = str[i];
+//     // debugger
+//     if (isCloseToEachOther(str[i], str[i+1])){
+//       curSeqCounter++;
+//       if (curSeqCounter > seqLength){
+//         continue
+//       }
+//     } else {
+//       if (curSeqCounter === seqLength && i < str.length){
+//         capitalLetterSeqTotal++;
+//         if (curChar === curChar.toUpperCase()){
+//           capitalLetterSeqTotal++;
+//         } else {
+//           smallLetterSeqTotal++;
+//         }
+//       }
+//       curSeqCounter = 1;
+//     }
+//   }
+//   return capitalLetterSeqTotal;
+// }
+
  */
