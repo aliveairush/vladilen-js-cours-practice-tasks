@@ -35,14 +35,14 @@ console.assert(getSumOfNumbers(10, '') === 55);
 
 // #JS.8.3 🚩
 const getDivisorsCount = (number = 1) => {
-  if (number < 0 || !Number.isInteger(number)) {
+  if (!Number.isInteger(number) || number < 0) {
     alert("number должен быть целым числом и больше нуля!");
     return 0;
   }
 
   let divisorsCount = 0;
   for (let i = 1; i <= number; i++) {
-    divisorsCount += number % i === 0
+    divisorsCount += number % i === 0;
   }
   return divisorsCount;
 }
