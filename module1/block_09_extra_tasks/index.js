@@ -3,7 +3,7 @@
   const checkQuestionAnswer = (question, correctAnswer) => {
     const userAnswer = prompt(question).trim();
 
-    if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
+    if (userAnswer.toLowerCase() === correctAnswer.  toLowerCase()) {
       alert('Ответ верный');
     }
     else {
@@ -19,14 +19,8 @@
 
 // Functions. Extra task #2  🚩
 (function funcTask2() {
-
-  const showSuccessMessage = (message) => {
-    console.log(message);
-  }
-
-  const showErrorMessage = (message) => {
-    console.error(message);
-  }
+  const showSuccessMessage = (message) =>  console.log(message);
+  const showErrorMessage = (message) => console.error(message);
 
   const checkTextOnErrorSymbol = (text, errorSymbol, successCallback, errorCallback) => {
     const errorsIndexes = text.split("").reduce((array, letter, letterIndex) => {
@@ -49,8 +43,7 @@
 
 // Arrays. Extra task #1  🚩
 (function arraysTask1() {
-  // Initial data
-  const goals = [8, 1, 1, 3, 2, -1, 5];
+  const goals = [8, 1, 1, 3, 2, -1, 5]; // Initial data
 
   // Найти Самый результативный матч по количеству голов
   const maxGoal = Math.max(...goals);
@@ -99,14 +92,14 @@
     if (!operand2) return 'Ошибка';
 
     // Creating array of math functions // By the way in this task Map would be perfect
-    const isGreaterThan = (a, b) => a > b;
-    const isLessThan = (a, b) => a < b;
-    const isEqualTo = (a, b) => a === b;
+    const checkIsGreaterThan = (a, b) => a > b;
+    const checkIsLessThan = (a, b) => a < b;
+    const checkIsEqualTo = (a, b) => a === b;
     const plus = (a, b) => a + b;
     const minus = (a, b) => a - b;
     const multiply = (a, b) => a * b;
     const divide = (a, b) => a / b;
-    const allMathMethods = [isGreaterThan, isLessThan, isEqualTo, plus, minus, multiply, divide]
+    const allMathMethods = [checkIsGreaterThan, checkIsLessThan, checkIsEqualTo, plus, minus, multiply, divide]
 
     // Getting index of required math function
     const signIndex = allMathSigns.indexOf(sign);
@@ -131,7 +124,6 @@
 
 // Arrays. Extra task #3  🚩
 (function arraysTask3() {
-
   const matrix = new Array(3);
   for (let i = 0; i < matrix.length; i++) {
     matrix[i] = [];
@@ -149,8 +141,7 @@
 
 // Arrays. Extra task #4  🚩
 (function arraysTask4() {
-  // Initial data
-  const matrix = [
+  const matrix = [ // Initial data
     [ 1, 2, 3 ],
     [ 4, 5, 6 ],
     [ 7, 8, 9 ],
