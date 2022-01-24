@@ -111,7 +111,7 @@
   console.assert(getMathResult(['1', '**', 1]) === 'Ошибка');
   console.assert(getMathResult([1, 1, 1, 1, 1]) === 'Ошибка');
   console.assert(getMathResult(['1', '**']) === 'Ошибка');
-  console.assert(getMathResult(['100', 'hello', 'javascript', undefined, 'help200', '+', 4]) === 104);
+  console.assert(getMathResult(['100\', \'hello\', \'javascript\', undefined, \'help200', '+', 4]) === 104);
   console.assert(getMathResult(['200', '+', 300]) === 500);
   console.assert(getMathResult(['20', '-', '5']) === 15);
   console.assert(getMathResult([100, '/', 100]) === 1);
