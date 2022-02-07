@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, user-scalable=no" name="viewport"/>
+  <link href="index.css" rel="stylesheet" type="text/css">
+  <title>Title</title>
+</head>
+<body>
+<h2 class="container__title">Кастомный селектор</h2>
+<div class="container" id="container"></div>
+
+<script>
+  // Метод создает Select по шаблону и возвращает DOM element;
+  const generateSelectElem = (id, options) => {
+    const div = document.createElement("div");
+    div.className = `select-dropdown select-dropdown--${id}`;
+    div.innerHTML = `<button class="select-dropdown__button select-dropdown__button--${id}">
+        <span class="select-dropdown select-dropdown--${id}">Выберите элемент</span>
+      </button>
+      <ul class="select-dropdown__list select-dropdown__list--${id}">
+        ${options.map(item => `<li class="select-dropdown__list-item" data-value="${item.value}">${item.text}</li>`)}
+      </ul>`;
+    return div;
+  }
+
+  class CustomSelect {
+    #currentSelectedOption;
+    #id;
+    #options;
+
+    constructor(id, options) {
+      this.#id = id;
+      this.#options = options;
+    }
+
+    get selectedValue() {
+      return this.#currentSelectedOption
+    }
+
+    #addDisplaySelectListener(selectElem) {
+      // Получение dom объекта кнопки, по нажатию на которую будет отображаться\скрывать Select
+      const selectDropdownBtnElem = selectElem.querySelector(".select-dropdown__button");
+      // Получение dom объекта списка option в Select
+      const itemListElem = selectElem.querySelector(".select-dropdown__list");
+
+      // При нажатии на кнопку отображаем\скрываем список options.
+      selectDropdownBtnElem.addEventListener('click', () => {
+        itemListElem.classList.toggle('active');
+      });
+    }
+
+    #addSelectActionListener(selectElem) {
+      // Получение списка options (ul element)
+      const itemListElem = selectElem.querySelector(".select-dropdown__list");
+
+      // Делегирование события на элемент ul.
+      itemListElem.addEventListener('click', (event) => {
+        // Если клик был не по элементу списка (li), то пропускаем событие
+        const currentListItem = event.target.closest('.select-dropdown__list-item');
+        if (!currentListItem) return false;
+
+        // Получение значения id options из data атрибута
+        const itemId = Number(currentListItem.dataset.value);
+        // Поиск option в списке options и присваивание его к currentlySelectedOption
+        this.#currentSelectedOption = this.#options.find(item => item.value === itemId);
+
+        // Получение span объекта, который отвечает за отображение выбранного option
+        const spanSelectDropdown = selectElem.querySelector("span.select-dropdown");
+        // Отображение текста выбранного option;
+        spanSelectDropdown.textContent = this.#currentSelectedOption.text;
+
+        // Закрываем список select, поскольку option был выбран
+        itemListElem.classList.remove('active');
+
+        // Убираем со всех li элементов class “selected” поскольку только один li может быть выбран
+        const listItems = itemListElem.querySelectorAll('.select-dropdown__list-item');
+        Array.from(listItems).forEach(item => item.classList.remove('selected'));
+        // К элементу li, по которому произошел клик, добавляем класс “selected”
+        currentListItem.classList.add('selected');
+      });
+    }
+
+    render(container) {
+      // Генерация Select по шаблону
+      const selectElem = generateSelectElem(this.#id, this.#options);
+      // Добавление к контейнеру сгенерированный элемент
+      container.append(selectElem);
+
+      /** Реализация закрытия открытия списка*/
+      this.#addDisplaySelectListener(selectElem);
+
+      /** Реализация выбора одного option элемента */
+      this.#addSelectActionListener(selectElem);
+    }
+  }
+
+  // Testing
+  const options = [
+    {value: 1, text: 'JavaScript'},
+    {value: 2, text: 'NodeJS'},
+    {value: 3, text: 'ReactJS'},
+    {value: 4, text: 'HTML'},
+    {value: 5, text: 'CSS'}
+  ];
+
+  const mainContainer = document.querySelector('#container');
+
+  const customSelect1 = new CustomSelect('123', options);
+  const customSelect2 = new CustomSelect('my-second-select', options);
+
+  customSelect1.render(mainContainer);
+  customSelect2.render(mainContainer);
+</script>
+</body>
+</html>
