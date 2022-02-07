@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, user-scalable=no" name="viewport"/>
+  <link href="task2.css" rel="stylesheet"/>
+  <title>Title</title>
+</head>
+<body>
+<div id="tasks">
+  <div class="tasks__wrapper">
+    <form class="create-task-block">
+      <input
+        class="create-task-block__input default-text-input"
+        name="taskName"
+        placeholder="Создайте новую задачу"
+        type="text"
+        value="Посмотреть урок по JavaScript"
+      >
+      <button
+        class="create-task-block__button default-button"
+        type="submit"
+      >
+        Создать
+      </button>
+    </form>
+    <div class="tasks-list"></div>
+  </div>
+</div>
+
+<!-- Task 5️⃣ -->
+<div class="modal-overlay modal-overlay_hidden">
+  <div class="delete-modal">
+    <h3 class="delete-modal__question">
+      Вы действительно хотите удалить эту задачу?
+    </h3>
+    <div class="delete-modal__buttons">
+      <button class="delete-modal__button delete-modal__cancel-button">
+        Отмена
+      </button>
+      <button class="delete-modal__button delete-modal__confirm-button">
+        Удалить
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  // Initial data
+  const tasks = [
+    {
+      id: '1138465078061',
+      completed: false,
+      text: 'Посмотреть новый урок по JavaScript',
+    },
+    {
+      id: '1138465078062',
+      completed: false,
+      text: 'Выполнить тест после урока',
+    },
+    {
+      id: '1138465078063',
+      completed: false,
+      text: 'Выполнить ДЗ после урока',
+    },
+  ]
+
+  // Task 2️⃣ Логика генерации списка задач по шаблону.
+  // Функция принимает объект задачи, заполняет html шаблон и возвращает сгенерированную строку
+  const generateTaskHtmlFromTemplate = ({id, text} = {}) => {
+    return `
+     <div class="task-item" data-task-id="${id}">
+       <div class="task-item__main-container">
+         <div class="task-item__main-content">
+           <form class="checkbox-form">
+               <input class="checkbox-form__checkbox" type="checkbox" id="task-${id}">
+               <label for="task-${id}"></label>
+           </form>
+           <span class="task-item__text">${text}</span>
+         </div>
+         <button class="task-item__delete-button default-button delete-button" data-delete-task-id="${id}">Удалить</button>
+       </div>
+     </div>`;
+  }
+
+  // Достаем объект списка задач
+  const taskList = document.querySelector(".tasks-list");
+
+  // Пробегаемся по списку задач. Генерируем html задачи и добавляем к списку задач.
+  tasks.forEach((task) => {
+    const taskHtml = generateTaskHtmlFromTemplate({
+      id: task.id,
+      text: task.text
+    });
+    taskList.insertAdjacentHTML("beforeend", taskHtml);
+  });
+
+
+  // Task 3️⃣ Функционал добавления задач
+  // По тексту создается новая задача в списке задач и также добавляется на страницу
+  const addTaskToListAndPage = (taskText) => {
+    const newTask = {
+      id: Date.now(),
+      text: taskText,
+      completed: false,
+    }
+    tasks.push(newTask);
+    const newTaskHtml = generateTaskHtmlFromTemplate(newTask);
+    taskList.insertAdjacentHTML("beforeend", newTaskHtml);
+  }
+
+  const taskCreationForm = document.querySelector(".create-task-block");
+  taskCreationForm.addEventListener('submit', (event) => {
+    event.preventDefault(); // Предотвращаем перезагрузку страницы
+    const taskInput = taskCreationForm.querySelector(".create-task-block__input");
+    const inputTaskText = taskInput.value; // Достаем текст из поля ввода
+
+
+    // TASK 4️⃣ Логика валидации
+    // Очистка ошибки если ошибка существовала
+    const error = taskCreationForm.querySelector(".error-message-block");
+    if (error !== null) {
+      error.remove()
+    }
+
+    // Если форма была пустая, то показать ошибку
+    if (inputTaskText === '') {
+      const error = '<span class="error-message-block">Название задачи не должно быть пустым.</span>';
+      taskCreationForm.insertAdjacentHTML("afterbegin", error);
+    }
+    // Если задача с таким именем уже существует, то показать ошибку
+    else if (tasks.find((task) => task.text === inputTaskText)) {
+      const error = '<span class="error-message-block">Задача с таким названием уже существует.</span>';
+      taskCreationForm.insertAdjacentHTML("afterbegin", error);
+    }
+    else { // Task 3️⃣ Если не было ошибок добавляем задачу
+      taskInput.value = ''; // Очищаем поле ввода
+      addTaskToListAndPage(inputTaskText); // Добавление задачи на страницу и в список задач
+    }
+  });
+
+  // Task 5️⃣. Логика удаления задач
+  const modal = document.querySelector(".modal-overlay");
+  let clickedTaskElem;
+
+  // Listener для кнопки "Удалить" у задачи
+  taskList.addEventListener('click', (event) => {
+    // Если кликнутый элемент это кнопка "Удалить"
+    if (event.target.closest(".task-item__delete-button")) {
+      modal.classList.remove("modal-overlay_hidden"); // Отобразить модальное окно
+      clickedTaskElem = event.target.closest(".task-item"); // Сохраняем ссылку на объект задачи
+    }
+  });
+
+  // Listener для кнопок "Отмена" и "Удалить" в модальном окне
+  modal.addEventListener('click', (event) => {
+    // Если была нажата кнопка "Отмена"
+    if (event.target.closest(".delete-modal__cancel-button")) {
+      modal.classList.add("modal-overlay_hidden"); // Скрываем модальное окно
+    }
+    // Если была нажата кнопка "Удалить"
+    if (event.target.closest(".delete-modal__confirm-button")) {
+      const clickedTaskId = clickedTaskElem.dataset.taskId; // Получаем id задачи
+      tasks.splice(tasks.findIndex(task => task.id === clickedTaskId), 1); // Находим индекс задачи и удаляем из массива
+      clickedTaskElem.remove(); // Удаляем элемент задачи из DOM
+      modal.classList.add("modal-overlay_hidden"); // Скрываем модальное окно
+    }
+  });
+
+  // Task 6️⃣ Логика переключения темы
+  let isDarkTheme = false; // По умолчанию светлая тема
+
+  // Listener для смены темы при нажатии на TAB
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Tab' && !isDarkTheme){
+      document.body.style.background = "#24292E";
+      taskList.style.color = '#fff';
+      const buttons = document.querySelectorAll("button");
+      Array.from(buttons).forEach(button => button.style.border = '1px solid #fff');
+
+      isDarkTheme = !isDarkTheme;
+    }
+    else if (event.key === 'Tab' && isDarkTheme){
+      document.body.style.background = "initial";
+      taskList.style.color = 'initial';
+      const buttons = document.querySelectorAll("button");
+      Array.from(buttons).forEach(button => button.style.border = 'none');
+
+      isDarkTheme = !isDarkTheme;
+    }
+  });
+
+</script>
+</body>
+</html>
