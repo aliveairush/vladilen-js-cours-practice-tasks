@@ -13,13 +13,16 @@
 <script>
   // Метод создает Select по шаблону и возвращает DOM element;
   const generateSelectElem = (id, options) => {
+
     const div = document.createElement("div");
     div.className = `select-dropdown select-dropdown--${id}`;
+    const liList = options.reduce((acc, item) => acc + `<li class="select-dropdown__list-item" data-value="${item.value}">${item.text}</li>`, '');
+
     div.innerHTML = `<button class="select-dropdown__button select-dropdown__button--${id}">
         <span class="select-dropdown select-dropdown--${id}">Выберите элемент</span>
       </button>
       <ul class="select-dropdown__list select-dropdown__list--${id}">
-        ${options.map(item => `<li class="select-dropdown__list-item" data-value="${item.value}">${item.text}</li>`)}
+        ${liList}
       </ul>`;
     return div;
   }
