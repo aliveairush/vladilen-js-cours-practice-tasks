@@ -8,6 +8,12 @@
     --default-border-color: #000;
     --error-color: #FF0000;
     --modal-overlay: rgb(84, 103, 145, 0.6);
+
+    --dark-checkbox-border-color: #ababab;
+    --dark-primary-color: #e5f6ff;
+    --dark-input-background-color: #131a1a;
+    --dark-error-color: #ff9595;
+    --dark-secondary-color: #cacaca;
 }
 
 html {
@@ -78,6 +84,13 @@ body {
     height: 44px;
 }
 
+.task-list__empty {
+    display: block;
+    font-size: 2.2rem;
+    color: #7c7c7c;
+    padding: 5px 5px;
+}
+
 .create-task-block__button,
 .task-item__delete-button {
     cursor: pointer;
@@ -138,7 +151,7 @@ body {
     padding: 0.2em;
 }
 
-.checkbox-form__checkbox  {
+.checkbox-form__checkbox {
     display: none;
 }
 
@@ -276,4 +289,30 @@ body {
 .delete-modal__confirm-button {
     background-color: var(--delete-button-background);
     border: 1px solid var(--delete-button-background);
+}
+
+/** THEME-DARK **/
+/* Input */
+.theme-dark .create-task-block__input {
+    background: var(--dark-input-background-color);
+    color: var(--dark-primary-color);
+}
+
+.theme-dark .create-task-block__input::placeholder {
+    color: var(--dark-secondary-color);
+}
+
+/* Checkbox */
+.theme-dark .checkbox-form__checkbox + label:before {
+    border: 0.1em solid var(--dark-checkbox-border-color);
+}
+
+ /* Error message */
+.theme-dark .error-message-block {
+    color: var(--dark-error-color) ;
+}
+
+ /* Empty task message */
+.theme-dark .task-list__empty {
+    color: var(--dark-secondary-color) ;
 }

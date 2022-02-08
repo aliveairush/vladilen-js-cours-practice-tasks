@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta content="width=device-width, user-scalable=no" name="viewport"/>
-  <link href="taskFrom2To6.css" rel="stylesheet"/>
+  <link href="taskFrom2To6.css" rel="stylesheet" type="text/css"/>
   <title>Title</title>
 </head>
 <body>
@@ -86,8 +86,28 @@
 
   // Достаем объект списка задач
   const taskList = document.querySelector(".tasks-list");
+  const taskCreationForm = document.querySelector(".create-task-block");
 
-  // Пробегаемся по списку задач. Генерируем html задачи и добавляем к списку задач.
+
+  // 🚩 Дополнительная задача сделать отображение "Задач нет" если список задач пуст
+
+  const LIST_HAS_CHANGED = 'list-has-changed-event';
+  // Слушатель изменений списка
+  taskList.addEventListener(LIST_HAS_CHANGED, () => {
+    if (tasks.length === 0) { // если задач нет, то отобразит сообщение "Задач нет"
+      const tasksEmptyMessage = '<span class="task-list__empty">Список задач пуст :)</span>';
+      taskList.insertAdjacentHTML("afterbegin", tasksEmptyMessage);
+    }
+    else { // Иначе удалить сообщение об ошибке если была
+      taskList.querySelector('.task-list__empty')?.remove();
+    }
+
+    // Если были какие-то ошибки валидации их убираем, поскольку лист изменился
+    taskCreationForm.querySelector('.error-message-block')?.remove();
+  })
+
+  taskList.dispatchEvent(new Event(LIST_HAS_CHANGED));
+
   tasks.forEach((task) => {
     const taskHtml = generateTaskHtmlFromTemplate({
       id: task.id,
@@ -110,11 +130,11 @@
     taskList.insertAdjacentHTML("beforeend", newTaskHtml);
   }
 
-  const taskCreationForm = document.querySelector(".create-task-block");
+
   taskCreationForm.addEventListener('submit', (event) => {
     event.preventDefault(); // Предотвращаем перезагрузку страницы
     const taskInput = taskCreationForm.querySelector(".create-task-block__input");
-    const inputTaskText = taskInput.value; // Достаем текст из поля ввода
+    const inputTaskText = taskInput.value.trim(); // Достаем текст из поля ввода и удаляем граничные пробелы
 
 
     // TASK 4️⃣ Логика валидации
@@ -137,6 +157,8 @@
     else { // Task 3️⃣ Если не было ошибок добавляем задачу
       taskInput.value = ''; // Очищаем поле ввода
       addTaskToListAndPage(inputTaskText); // Добавление задачи на страницу и в список задач
+
+      taskList.dispatchEvent(new Event(LIST_HAS_CHANGED)); // Создаем событие "list-changed";
     }
   });
 
@@ -165,6 +187,8 @@
       tasks.splice(tasks.findIndex(task => task.id === clickedTaskId), 1); // Находим индекс задачи и удаляем из массива
       clickedTaskElem.remove(); // Удаляем элемент задачи из DOM
       modal.classList.add("modal-overlay_hidden"); // Скрываем модальное окно
+
+      taskList.dispatchEvent(new Event(LIST_HAS_CHANGED)); // Создаем событие "list-changed";
     }
   });
 
@@ -173,20 +197,22 @@
 
   // Listener для смены темы при нажатии на TAB
   document.addEventListener('keydown', (event) => {
-    if (event.key === 'Tab' && !isDarkTheme){
+    if (event.key === 'Tab' && !isDarkTheme) {
       document.body.style.background = "#24292E";
       taskList.style.color = '#fff';
       const buttons = document.querySelectorAll("button");
       Array.from(buttons).forEach(button => button.style.border = '1px solid #fff');
 
+      document.body.classList.add('theme-dark')
       isDarkTheme = !isDarkTheme;
     }
-    else if (event.key === 'Tab' && isDarkTheme){
+    else if (event.key === 'Tab' && isDarkTheme) {
       document.body.style.background = "initial";
       taskList.style.color = 'initial';
       const buttons = document.querySelectorAll("button");
       Array.from(buttons).forEach(button => button.style.border = 'none');
 
+      document.body.classList.remove('theme-dark')
       isDarkTheme = !isDarkTheme;
     }
   });
