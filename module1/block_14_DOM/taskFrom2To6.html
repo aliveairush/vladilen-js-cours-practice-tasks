@@ -106,7 +106,7 @@
     taskCreationForm.querySelector('.error-message-block')?.remove();
   })
 
-  taskList.dispatchEvent(new Event(LIST_HAS_CHANGED));
+  taskList.dispatchEvent(new CustomEvent(LIST_HAS_CHANGED));
 
   tasks.forEach((task) => {
     const taskHtml = generateTaskHtmlFromTemplate({
@@ -158,7 +158,7 @@
       taskInput.value = ''; // Очищаем поле ввода
       addTaskToListAndPage(inputTaskText); // Добавление задачи на страницу и в список задач
 
-      taskList.dispatchEvent(new Event(LIST_HAS_CHANGED)); // Создаем событие "list-changed";
+      taskList.dispatchEvent(new CustomEvent(LIST_HAS_CHANGED)); // Создаем событие "list-changed";
     }
   });
 
@@ -188,7 +188,7 @@
       clickedTaskElem.remove(); // Удаляем элемент задачи из DOM
       modal.classList.add("modal-overlay_hidden"); // Скрываем модальное окно
 
-      taskList.dispatchEvent(new Event(LIST_HAS_CHANGED)); // Создаем событие "list-changed";
+      taskList.dispatchEvent(new CustomEvent(LIST_HAS_CHANGED)); // Создаем событие "list-changed";
     }
   });
 
