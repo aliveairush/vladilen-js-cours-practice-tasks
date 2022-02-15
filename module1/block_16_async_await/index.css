@@ -1,13 +1,3 @@
-* {
-    margin: 0;
-    padding: 0;
-}
-
-a {
-    text-decoration: none;
-    color: inherit;
-}
-
 :root {
     --text-shadow-color: rgba(255, 255, 255, 0.5);
     --link-background: #DAD2CA;
@@ -17,33 +7,7 @@ a {
 }
 
 body {
-    display: flex;
-    justify-content: center;
-}
-
-.container {
-    width: 60vw;
-    display: flex;
-    gap: 40px;
-    flex-direction: column;
-}
-
-.loader {
-    color: #6400ff;
-}
-
-.photo-item {
-    text-align: center;
-}
-
-.photo-item__image {
-    width: 100%;
-    max-width: 600px;
-}
-
-
-.task-name {
-    text-align: center;
+    padding: 20px;
 }
 
 .data-container {
@@ -54,7 +18,7 @@ body {
     text-shadow: 0 1px 0 var(--text-shadow-color);
 }
 
-.data-container a {
+.data-container li {
     position: relative;
     display: block;
     padding: .4em .4em .4em 2em;
@@ -66,15 +30,15 @@ body {
     transition: .3s ease-out;
 }
 
-.data-container a:hover {
+.data-container li:hover {
     background: var(--link-background);
 }
 
-.data-container a:hover:before {
+.data-container li:hover:before {
     transform: rotate(360deg);
 }
 
-.data-container a:before {
+.data-container li:before {
     content: counter(li);
     counter-increment: li;
     position: absolute;
