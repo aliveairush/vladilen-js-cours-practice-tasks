@@ -30,13 +30,13 @@ const loadAllUsers = () => {
   displayLoader(dataContainerElem1, true);
 
   fetch(USER_LIST_URL)
-    .finally(() => displayLoader(dataContainerElem1, false))
     .then((response) => {
       if (!response.ok) throw new Error("Something went wrong, could not fetch data");
       return response.json();
     })
     .then(userList => dataContainerElem1.insertAdjacentHTML("beforeend", transformUserListIntoHtml(userList)))
-    .catch(error => console.error(error.message));
+    .catch(error => console.error(error.message))
+    .finally(() => displayLoader(dataContainerElem1, false));
 }
 
 loadAllUsers();
@@ -48,10 +48,10 @@ const getUsersByIds = (ids = []) => {
   const requests = ids.map(id => fetch(`${USER_LIST_URL}/${id}`));
 
   Promise.all(requests)
-    .finally(() => displayLoader(dataContainerElem2, false))
     .then(responses => Promise.all(responses.map(response => response.json())))
     .then(responseJsonList => dataContainerElem2.insertAdjacentHTML("beforeend", transformUserListIntoHtml(responseJsonList)))
-    .catch(error => console.error(error.message));
+    .catch(error => console.error(error.message))
+    .finally(() => displayLoader(dataContainerElem2, false));
 }
 
 getUsersByIds([5, 6, 2, 1]);

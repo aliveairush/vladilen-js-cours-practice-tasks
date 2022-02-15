@@ -22,6 +22,7 @@ const createNewPost = () => {
 };
 createNewPost();
 
+// Async method
 const asyncCreateNewPost = async () => {
   isLoading = true;
 
@@ -60,16 +61,16 @@ getTodosByIds([43, 21, 55, 100, 10]);
 
 
 // Async code
+
 const asyncGetTodosByIds = async (ids) => {
   try {
-    const requests = ids.map(async (id) => {
-      const resp = await fetch(`${TODOS_URL}/${id}`);
-      return resp.json();
-    });
+    const requests = ids.map((id) => fetch(`${TODOS_URL}/${id}`));
+    const allResponses = await Promise.all(requests);
+    const allTasks = await Promise.all(allResponses.map(resp => resp.json()));
 
-    const allTasks = await Promise.all(requests);
     console.log("Async version", allTasks);
-  } catch (error) {
+  } catch
+    (error) {
     console.error(error.message);
   }
 }
