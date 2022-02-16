@@ -1,0 +1,149 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@300;400;700&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Noto Sans Georgian', Arial, sans-serif;
+    font-size: 16px;
+    color: #333;
+    line-height: 1.15;
+    min-height: 100vh;
+}
+
+h1 {
+    font-size: 2.5rem; /* 40px */
+}
+
+h2 {
+    font-size: 1.875rem; /* 30px */
+}
+
+h3 {
+    font-size: 1.5rem; /* 24px */
+}
+
+p {
+    font-size: 1.25rem; /* 20px */
+}
+
+
+.main-container {
+    padding: 0 15px;
+    display: flex;
+    justify-content: center;
+    height: 100%;
+}
+
+@media (min-width: 575.98px) {
+    .main-container {
+        padding: 0 calc(50% - 270px);
+    }
+}
+
+@media (min-width: 767.98px) {
+    .main-container {
+        padding: 0 calc(50% - 360px);
+    }
+}
+
+@media (min-width: 991.98px) {
+    .main-container {
+        padding: 0 calc(50% - 480px);
+    }
+}
+
+@media (min-width: 1199.98px) {
+    .main-container {
+        padding: 0 calc(50% - 590px);
+    }
+}
+
+.post {
+    max-width: 70ch;
+    padding: 2rem 0;
+}
+
+.post__title {
+    margin-bottom: 1.5rem;
+    line-height: 1.15;
+    padding: 0 1rem;
+}
+
+.post__text {
+    margin-bottom: 1.25rem;
+    padding: 0 1rem;
+
+}
+
+.post__comments-text {
+    display: block;
+    font-size: 1.15rem;
+    margin-bottom: 1rem;
+    padding: 0 1rem;
+
+}
+
+.post__comments {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.post-comment {
+    padding: 1rem 1rem 20px 1rem;
+    box-shadow: rgba(99, 99, 99, 0.2) 0 2px 8px 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.post-comment__author {
+    color: #0089c7;
+    margin: 0 0 0.5rem 0;
+}
+
+/* loader */
+.la-line-scale-party {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: -70px;
+    padding: 2rem;
+}
+
+.la-line-scale-party > div {
+    display: inline-block;
+    background-color: currentColor;
+    width: 10px;
+    height: 70px;
+    margin: 2px;
+    animation: line-scale-party 1s infinite ease-in-out;
+}
+
+@keyframes line-scale-party {
+    0% {
+        transform: scale(1, 1);
+    }
+    50% {
+        opacity: 0.5;
+        transform: scale(.5, .3);
+    }
+    100% {
+        transform: scale(1, 1);
+    }
+}
+
+.la-line-scale-party > div:nth-child(1) {
+    animation-delay: -1s;
+}
+
+.la-line-scale-party > div:nth-child(2) {
+    animation-delay: -.7s;
+}
+
+.la-line-scale-party > div:nth-child(3) {
+    animation-delay: -.5s;
+}
